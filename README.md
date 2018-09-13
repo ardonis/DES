@@ -1,2 +1,1 @@
-# DES
-Data encryption standard in python (incomplete)
+Just a little school project
