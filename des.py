@@ -36,6 +36,7 @@ def Fbox(pText, Key):
 
     def sBox(binInp, boxNum):
        # takes a 6-bit string and a number as inputs and returns a 4-bit output as string"""
+        print(binInp)
 
         S1 = [[14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7],
               [0, 15,  7,  4, 14,  2, 13,  1, 10,  6, 12, 11,  9,  5,  3,  8],
@@ -79,6 +80,7 @@ def Fbox(pText, Key):
 
         colomn = int(binInp[1:5], 2)
         row = int(binInp[0] + binInp[5], 2)
+        output = ""
 
         if boxNum == 1:
             output = bin(S1[row][colomn]+16)[3:]
@@ -99,12 +101,12 @@ def Fbox(pText, Key):
         elif boxNum > 8:
             raise NameError("No more s-boxes")
 
-       # print("colomn: {}\nrow: {}\ninput: {}\noutput: {}".format(colomn, row, binInp, output))"""
+        # print("colomn: {}\nrow: {}\ninput: {}\noutput: {}".format(colomn, row, binInp, output))"""
 
         return output
 
     def pBox(Inp):
-       # takes a 32-bit input as string and shuffles the bits"""
+        # takes a 32-bit input as string and shuffles the bits"""
 
         tbl = [16, 7, 20, 21, 29, 12, 28, 17, 1, 15, 23, 26, 5, 18, 31,
                10, 2, 8, 24, 14, 32, 27, 3, 9, 19, 13, 30, 6, 22, 11, 4, 25]
@@ -120,7 +122,22 @@ def Fbox(pText, Key):
         return "".join(out)
 
     if len(pText) == 32:
-        lText = expansion(pText)
+        Text1 = expansion(pText)
     else:
         raise IndexError("input too long: " + str(len(pText)))
 
+    text2 = xor(Text1, Key)
+
+    text3 = []
+    for i in range(8):
+        text3.append(sBox(text2[i*6:i*6+6], i+1))
+
+    text4 = pBox("".join(text3))
+
+    return text4
+
+
+print(Fbox("01000101011110000110000101101101",
+           "110101010111100011111001001011010111000001101100"))
+
+# key schedule
